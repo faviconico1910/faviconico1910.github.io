@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Private Markdown Inbox - s4lm0n</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .admin-shell { max-width: 680px; margin: 0 auto; padding: 42px 0 64px; }
+      .admin-header { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; margin-bottom: 36px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+      .admin-header h1 { margin: 0; font-size: 1.45rem; }
+      .admin-header a, .admin-link { color: var(--accent); font-family: var(--mono); font-size: .75rem; text-decoration: none; }
+      .admin-panel { padding: 26px; border: 1px solid var(--line); background: rgba(255, 125, 163, .05); }
+      .admin-panel h2 { margin: 0 0 22px; }
+      .admin-panel label { display: block; margin-bottom: 8px; color: var(--muted); font-family: var(--mono); font-size: .75rem; }
+      .admin-panel input[type="password"], .admin-panel input[type="file"] { width: 100%; margin-bottom: 18px; color: var(--ink); font: inherit; }
+      .admin-panel input[type="password"] { padding: 12px; border: 1px solid var(--line); background: transparent; }
+      .admin-panel button { padding: 11px 16px; border: 1px solid var(--accent); background: var(--accent); color: #241b20; cursor: pointer; font: 600 .78rem var(--mono); }
+      .admin-panel button:hover { background: transparent; color: var(--accent); }
+      .status { min-height: 24px; margin: 16px 0 0; color: var(--muted); font-size: .85rem; }
+      .private-note { margin: 0 0 24px; color: var(--muted); font-size: .86rem; line-height: 1.7; }
+      .file-list { margin: 26px 0 0; padding: 0; list-style: none; }
+      .file-list li { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0; border-top: 1px solid var(--line); color: var(--muted); font-family: var(--mono); font-size: .76rem; }
+      .file-group h3 { margin: 28px 0 0; color: var(--muted); font: 500 .72rem var(--mono); text-transform: uppercase; }
+      .file-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+      .preview-button { padding: 6px 9px; border: 1px solid var(--line); background: transparent; color: var(--muted); cursor: pointer; font: inherit; }
+      .preview-button:hover { border-color: var(--accent); color: var(--accent); }
+      .publish-button { border-color: var(--accent); color: var(--accent); }
+      .rename-button { border-color: #8f7890; color: #d8c5d6; }
+      .delete-button { border-color: #a75b70; color: #e68ca5; }
+      .preview { margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--line); }
+      .preview h3 { margin: 0 0 18px; color: var(--accent); font: 500 .78rem var(--mono); }
+      .preview-body { color: var(--ink); font-size: .9rem; line-height: 1.8; }
+      .preview-body h1, .preview-body h2, .preview-body h3 { margin: 1.4em 0 .55em; font-family: var(--sans); }
+      .preview-body h1 { font-size: 1.7rem; }
+      .preview-body h2 { font-size: 1.3rem; }
+      .preview-body h3 { font-size: 1.05rem; }
+      .preview-body p { margin: 0 0 1em; }
+      .preview-body code { padding: 2px 5px; background: var(--accent-soft); color: var(--accent); font-family: var(--mono); font-size: .85em; }
+      .preview-body pre { overflow-x: auto; padding: 16px; background: #171318; color: #f4edf2; }
+      .preview-body pre code { padding: 0; background: transparent; color: inherit; }
+      .preview-body img { display: block; max-width: 100%; height: auto; margin: 22px 0; border: 1px solid var(--line); }
+      .preview-body blockquote { margin: 22px 0; padding-left: 16px; border-left: 2px solid var(--accent); color: var(--muted); }
+      .preview-body a { color: var(--accent); }
+      #logout-button { margin-top: 28px; border-color: var(--line); background: transparent; color: var(--muted); }
+      #logout-button:hover { border-color: var(--accent); color: var(--accent); }
+      [hidden] { display: none !important; }
+      @media (max-width: 560px) { .admin-shell { width: min(100% - 32px, 680px); padding-top: 28px; } .admin-header { align-items: flex-start; flex-direction: column; } .admin-panel { padding: 20px; } }
+    </style>
+  </head>
+  <body>
+    <main class="admin-shell">
+      <header class="admin-header">
+        <h1>s4lm0n / private inbox</h1>
+        <a href="/">Back to blog</a>
+      </header>
+
+      <section id="login-panel" class="admin-panel">
+        <h2>Admin login</h2>
+        <p class="private-note">This area is private. Only the account owner can send Markdown files for review.</p>
+        <form id="login-form">
+          <label for="password">Admin password</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required />
+          <button type="submit">Unlock inbox</button>
+        </form>
+        <p id="login-status" class="status" role="status"></p>
+      </section>
+
+      <section id="upload-panel" class="admin-panel" hidden>
+        <h2>Send a Markdown draft</h2>
+        <p class="private-note">Files are stored privately on the server. They are not published automatically.</p>
+        <form id="upload-form">
+          <input id="csrf-token" name="csrfToken" type="hidden" />
+          <label for="markdown">Markdown file</label>
+          <input id="markdown" name="markdown" type="file" accept=".md,.markdown,text/markdown" required />
+          <button type="submit">Upload draft</button>
+        </form>
+        <p id="upload-status" class="status" role="status"></p>
+        <div class="file-group">
+          <h3>Drafts</h3>
+          <ul id="draft-list" class="file-list"></ul>
+        </div>
+        <div class="file-group">
+          <h3>Published</h3>
+          <ul id="published-list" class="file-list"></ul>
+        </div>
+        <section id="preview" class="preview" hidden>
+          <h3 id="preview-title"></h3>
+          <div id="preview-body" class="preview-body"></div>
+        </section>
+        <button id="logout-button" type="button">Lock inbox</button>
+      </section>
+    </main>
+    <script>
+      const loginPanel = document.querySelector("#login-panel");
+      const uploadPanel = document.querySelector("#upload-panel");
+      const loginStatus = document.querySelector("#login-status");
+      const uploadStatus = document.querySelector("#upload-status");
+      const csrfToken = document.querySelector("#csrf-token");
+      const draftList = document.querySelector("#draft-list");
+      const publishedList = document.querySelector("#published-list");
+      const preview = document.querySelector("#preview");
+      const previewTitle = document.querySelector("#preview-title");
+      const previewBody = document.querySelector("#preview-body");
+
+      async function loadFiles() {
+        const [draftResponse, publishedResponse] = await Promise.all([
+          fetch("/api/admin/files"),
+          fetch("/api/admin/published"),
+        ]);
+        if (!draftResponse.ok || !publishedResponse.ok) return;
+        const drafts = await draftResponse.json();
+        const published = await publishedResponse.json();
+        renderFileList(draftList, drafts.files, "draft");
+        renderFileList(publishedList, published.files, "published");
+      }
+
+      function renderFileList(list, files, source) {
+        list.replaceChildren(...files.map((file) => {
+          const item = document.createElement("li");
+          const name = document.createElement("span");
+          name.textContent = file;
+          const actions = document.createElement("div");
+          actions.className = "file-actions";
+          actions.append(actionButton("Preview", "preview-button", () => showPreview(file, source)));
+          actions.append(actionButton("Rename", "preview-button rename-button", () => renameFile(file, source)));
+          if (source === "draft") {
+            actions.append(actionButton("Publish", "preview-button publish-button", () => publishFile(file)));
+          } else {
+            actions.append(actionButton("Unpublish", "preview-button", () => unpublishFile(file)));
+          }
+          actions.append(actionButton("Delete", "preview-button delete-button", () => deleteFile(file, source)));
+          item.append(name, actions);
+          return item;
+        }));
+      }
+
+      function actionButton(label, className, handler) {
+        const button = document.createElement("button");
+        button.className = className;
+        button.type = "button";
+        button.textContent = label;
+        button.addEventListener("click", handler);
+        return button;
+      }
+
+      async function showPreview(file, source) {
+        const response = await fetch(`/api/admin/preview/${source}/${encodeURIComponent(file)}`);
+        const data = await response.json();
+        if (!response.ok) return;
+        previewTitle.textContent = data.fileName;
+        previewBody.innerHTML = data.html;
+        preview.hidden = false;
+        preview.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      async function changePost(action, fileName) {
+        const response = await fetch(`/api/admin/${action}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ fileName, csrfToken: csrfToken.value }),
+        });
+        const data = response.status === 204 ? {} : await response.json();
+        if (!response.ok) throw new Error(data.error || "Request failed");
+        preview.hidden = true;
+        await loadFiles();
+      }
+
+      async function publishFile(file) {
+        await changePost("publish", file);
+      }
+
+      async function unpublishFile(file) {
+        await changePost("unpublish", file);
+      }
+
+      async function renameFile(file, source) {
+        const title = window.prompt("New post title", file.replace(/\.md$/, ""));
+        if (!title) return;
+        const response = await fetch("/api/admin/rename", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ fileName: file, source, title, csrfToken: csrfToken.value }),
+        });
+        if (response.ok) {
+          await loadFiles();
+          if (!preview.hidden) await showPreview(file, source);
+        }
+      }
+
+      async function deleteFile(file, source) {
+        if (!window.confirm(`Delete ${file}?`)) return;
+        const response = await fetch("/api/admin/delete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ fileName: file, source, csrfToken: csrfToken.value }),
+        });
+        if (response.ok) {
+          preview.hidden = true;
+          await loadFiles();
+        }
+      }
+
+      document.querySelector("#login-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        loginStatus.textContent = "";
+        const response = await fetch("/api/admin/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password: new FormData(event.target).get("password") }),
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          loginStatus.textContent = data.error || "Login failed";
+          return;
+        }
+        csrfToken.value = data.csrfToken;
+        loginPanel.hidden = true;
+        uploadPanel.hidden = false;
+        await loadFiles();
+      });
+
+      document.querySelector("#upload-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        uploadStatus.textContent = "Uploading...";
+        const response = await fetch("/api/admin/upload", { method: "POST", body: new FormData(event.target) });
+        const data = await response.json();
+        uploadStatus.textContent = response.ok ? `Stored privately as ${data.fileName}` : (data.error || "Upload failed");
+        if (response.ok) {
+          const token = csrfToken.value;
+          event.target.reset();
+          csrfToken.value = token;
+          await loadFiles();
+        }
+      });
+
+      document.querySelector("#logout-button").addEventListener("click", async () => {
+        await fetch("/api/admin/logout", { method: "POST" });
+        uploadPanel.hidden = true;
+        loginPanel.hidden = false;
+      });
+    </script>
+  </body>
+</html>

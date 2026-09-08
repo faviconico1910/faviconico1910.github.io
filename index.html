@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Security notes by s4lm0n, a SOC Analyst based in Ho Chi Minh City."
+    />
+    <title>s4lm0n - Security Notes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <main class="page-shell">
+      <!-- Thanh điều hướng chính của trang. -->
+      <nav class="topbar" aria-label="Main navigation">
+        <a class="brand-mark" href="#writing" aria-label="Back to home">s4lm0n<span>/</span></a>
+        <div class="content-tabs">
+          <button class="tab-button is-active" type="button" data-tab="writing" aria-selected="true">
+            Home
+          </button>
+          <button class="tab-button" type="button" data-tab="about" aria-selected="false">
+            About
+          </button>
+        </div>
+      </nav>
+
+      <!-- Profile: thay ảnh, tên, bio và các đường dẫn mạng xã hội tại đây. -->
+      <header class="profile-section">
+        <img
+          class="avatar"
+          src="salmon-cartoon.svg"
+          alt="Ảnh đại diện cá hồi của s4lm0n"
+          width="80"
+          height="80"
+        />
+
+        <div class="profile-copy">
+          <h1>s4lm0n</h1>
+
+          <!-- Đổi href thành liên kết thật của bạn khi sử dụng trang. -->
+          <nav class="social-links" aria-label="Mạng xã hội">
+            <a href="https://github.com/faviconico1910" target="_blank" rel="noreferrer" aria-label="GitHub">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.61-3.37-1.18-3.37-1.18-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.35 1.09 2.92.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.57 9.57 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.86v2.76c0 .27.18.58.69.48A10 10 0 0 0 12 2Z" />
+              </svg>
+              <span>GitHub</span>
+            </a>
+            <a href="https://www.linkedin.com/in/phu-an/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5.12 3.5a2.12 2.12 0 1 1 0 4.24 2.12 2.12 0 0 1 0-4.24ZM3.3 9h3.64v11.7H3.3V9Zm5.93 0h3.49v1.6h.05c.49-.92 1.67-1.89 3.44-1.89 3.68 0 4.36 2.42 4.36 5.57v6.42h-3.64v-5.69c0-1.36-.03-3.1-1.89-3.1-1.89 0-2.18 1.47-2.18 3v5.79H9.23V9Z" />
+              </svg>
+              <span>LinkedIn</span>
+            </a>
+          </nav>
+        </div>
+      </header>
+
+      <div class="content-area">
+        <!-- Blog list: mỗi bài là một thẻ liên kết độc lập, dễ thay nội dung. -->
+        <section id="writing" class="writing-section tab-panel" data-panel="writing" aria-labelledby="writing-title">
+        <div class="section-heading">
+          <h2 id="writing-title">Home</h2>
+          <span id="post-count" class="post-count">0 reports</span>
+        </div>
+
+        <div class="post-list"></div>
+        </section>
+
+        <!-- About: nội dung giới thiệu chi tiết, hiển thị trong tab riêng. -->
+        <section class="about-section tab-panel" data-panel="about" aria-labelledby="about-title" hidden>
+          <div class="section-heading">
+            <h2 id="about-title">About</h2>
+            <span class="post-count">/whoami</span>
+          </div>
+
+          <div class="about-copy">
+            <p class="about-lead">I am s4lm0n, a SOC Analyst based in Ho Chi Minh City.</p>
+            <p>
+              I am currently developing hands-on experience in SOC environments, working
+              with SIEM platforms, Windows security logs, network traffic, and detection
+              engineering. I enjoy investigating suspicious activities, correlating events,
+              and turning security findings into practical detection rules.
+            </p>
+            <p>
+              Beyond SOC operations, I am also interested in understanding how attacks work
+              from an offensive perspective. I believe that learning both attack techniques
+              and defensive detection helps build stronger security solutions.
+            </p>
+          </div>
+
+          <div class="about-details">
+            <div>
+              <span class="detail-label">Focus</span>
+              <span>SOC Operations · SIEM · Detection Engineering</span>
+            </div>
+            <div>
+              <span class="detail-label">Currently learning</span>
+              <span>Offensive Security · Threat Intelligence</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <footer>© 2026 s4lm0n <span aria-hidden="true">·</span> Made with care</footer>
+    </main>
+    <script>
+      const tabButtons = document.querySelectorAll("[data-tab]");
+      const tabPanels = document.querySelectorAll("[data-panel]");
+
+      tabButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const selectedTab = button.dataset.tab;
+
+          tabButtons.forEach((tab) => {
+            const isSelected = tab === button;
+            tab.classList.toggle("is-active", isSelected);
+            tab.setAttribute("aria-selected", String(isSelected));
+          });
+
+          tabPanels.forEach((panel) => {
+            panel.hidden = panel.dataset.panel !== selectedTab;
+          });
+        });
+      });
+
+      async function loadPublishedPosts() {
+        const response = await fetch("/api/posts");
+        if (!response.ok) return;
+        const { posts } = await response.json();
+        const postList = document.querySelector(".post-list");
+        const postCount = document.querySelector("#post-count");
+
+        if (posts.length === 0) {
+          const emptyState = document.createElement("p");
+          emptyState.className = "empty-state";
+          emptyState.textContent = "No published notes yet.";
+          postList.append(emptyState);
+        }
+
+        posts.reverse().forEach((post) => {
+          const link = document.createElement("a");
+          link.className = "post-card published-post";
+          link.href = post.url;
+
+          const time = document.createElement("time");
+          const publishedDate = new Date(post.publishedAt);
+          time.dateTime = post.publishedAt;
+          time.textContent = publishedDate.toLocaleDateString("en-GB");
+          const content = document.createElement("div");
+          content.className = "post-content";
+          const title = document.createElement("h3");
+          title.textContent = post.title;
+          const excerpt = document.createElement("p");
+          excerpt.textContent = post.excerpt;
+          content.append(title, excerpt);
+          const arrow = document.createElement("span");
+          arrow.className = "arrow";
+          arrow.setAttribute("aria-hidden", "true");
+          arrow.textContent = "->";
+          link.append(time, content, arrow);
+          postList.prepend(link);
+        });
+
+        postCount.textContent = `${posts.length} reports`;
+      }
+
+      loadPublishedPosts();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "name": "s4lm0n-security-notes",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Private Markdown inbox for s4lm0n's security notes",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "express-session": "^1.18.1",
+    "marked": "^15.0.7",
+    "multer": "^2.0.2"
+  }
+}
