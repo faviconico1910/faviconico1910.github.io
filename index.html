@@ -132,7 +132,8 @@
       });
 
       async function loadPublishedPosts() {
-        const response = await fetch("/api/posts");
+        let response = await fetch("/api/posts");
+        if (!response.ok) response = await fetch("posts.json");
         if (!response.ok) return;
         const { posts } = await response.json();
         const postList = document.querySelector(".post-list");
