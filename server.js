@@ -270,7 +270,7 @@ app.get("/post/:fileName", async (request, response) => {
     const fileName = markdownFileName(request.params.fileName);
     const markdown = await fs.readFile(path.join(postsDirectory, fileName), "utf8");
     const title = postTitle(markdown, fileName);
-    response.send(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${title} - s4lm0n</title><link rel="stylesheet" href="/style.css"></head><body><main class="article-page"><a class="article-back" href="/">&larr; Back to home</a><article class="article-content">${marked.parse(stripFrontmatter(markdown))}</article></main></body></html>`);
+    response.send(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${title} - s4lm0n</title><link rel="stylesheet" href="/style.css"><link rel="icon" href="/favicon.svg" type="image/svg+xml"></head><body><main class="article-page"><a class="article-back" href="/">&larr; Back to home</a><article class="article-content">${marked.parse(stripFrontmatter(markdown))}</article></main></body></html>`);
   } catch {
     response.status(404).send("Post not found");
   }

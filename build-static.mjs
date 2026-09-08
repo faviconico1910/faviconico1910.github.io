@@ -38,6 +38,7 @@ function articlePage(title, html) {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>${title} - s4lm0n</title>
     <link rel="stylesheet" href="../style.css" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
   </head>
   <body>
     <main class="article-page">
@@ -53,6 +54,7 @@ await fs.mkdir(path.join(outputDirectory, "posts"), { recursive: true });
 await fs.copyFile(path.join(root, "index.html"), path.join(outputDirectory, "index.html"));
 await fs.copyFile(path.join(root, "style.css"), path.join(outputDirectory, "style.css"));
 await fs.copyFile(path.join(root, "salmon-cartoon.svg"), path.join(outputDirectory, "salmon-cartoon.svg"));
+await fs.copyFile(path.join(root, "favicon.svg"), path.join(outputDirectory, "favicon.svg"));
 
 const entries = await fs.readdir(sourceDirectory, { withFileTypes: true });
 const posts = [];
