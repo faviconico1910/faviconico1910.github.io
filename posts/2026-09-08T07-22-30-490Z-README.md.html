@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WannaPlayAGame - s4lm0n</title>
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+  <body>
+    <main class="article-page">
+      <a class="article-back" href="../">&larr; Back to home</a>
+      <article class="article-content"><h3>Wanna_Play_A_Game</h3>
+<hr>
+<pre><code>printf(&quot;[*] NickName&gt; &quot;);
+if ( read(0, &amp;username, 0x40uLL) == -1 )
+{
+  perror(&quot;READ ERROR&quot;);
+  exit(-1);
+}
+while ( 1 )
+{
+  menu();
+  v3 = read_int();
+  printf(&quot;[*] Guess&gt;&quot;);
+  v4 = read_int();
+  ((void (__fastcall *)(__int64))conv[v3 - 1])(v4);
+}
+</code></pre>
+<p>We&#39;ll use <strong>out of bound</strong> bug to exploit. The program calls <code>conv</code> without checking the range of it.</p>
+<pre><code>  for ( i = 0; i &lt;= 6; ++i )
+    path[i] ^= 0x13u;
+  if ( a1 == passcode )
+  {
+    puts(&quot;[+] WINNNN!&quot;);
+    execve(path, 0LL, 0LL);
+  }
+  else
+  {
+    puts(&quot;[-] YOU ARE NOT WORTHY FOR A SHELL!&quot;);
+  }
+</code></pre>
+<p>The plan is to call <code>hard</code> with a right <code>passcode</code>. It gives us the shell by call <code>execve(/bin/sh, NULL, NULL)</code>.
+<code>passcode</code> is the random value from <code>/dev/random</code>. So, we have to leak it.
+<img src="https://github.com/user-attachments/assets/3d8e6cd7-a21c-4747-8793-620c33d2db7f" alt="image"></p>
+<p>The offset between<code>conv</code> address and the beginning of <code>username</code> is 14. Therefore, we can use index <code>15</code> to reach here. 
+We&#39;&#39;ll use <code>puts</code> function to leak the <code>passcode</code> then input it into the program. 
+Here is my solution: <a href="https://github.com/faviconico1910/CTFs/blob/master/0xl4ugh/wanna_play_a_game/chall.py">solution.py</a></p>
+</article>
+    </main>
+  </body>
+</html>

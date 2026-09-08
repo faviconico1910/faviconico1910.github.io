@@ -78,5 +78,15 @@ for (const entry of entries.filter((item) => item.isFile() && item.name.endsWith
 }
 
 posts.sort((left, right) => right.publishedAt.localeCompare(left.publishedAt));
-await fs.writeFile(path.join(outputDirectory, "posts.json"), JSON.stringify({ posts }, null, 2));
+const postsJson = JSON.stringify({ posts }, null, 2);
+await fs.writeFile(path.join(outputDirectory, "posts.json"), postsJson);
+await fs.writeFile(path.join(root, "posts.json"), postsJson);
+
+for (const post of posts) {
+  await fs.copyFile(
+    path.join(outputDirectory, "posts", `${post.fileName}.html`),
+    path.join(sourceDirectory, `${post.fileName}.html`),
+  );
+}
+
 console.log(`Built ${posts.length} static post(s) into dist/`);
