@@ -101,6 +101,12 @@ function frontmatterTitle(markdown) {
   return frontmatter?.match(/^title:\s*(.+)$/m)?.[1].trim().replace(/^['"]|['"]$/g, "");
 }
 
+function publishedAt(markdown, filePath) {
+  const frontmatter = markdown.match(/^\uFEFF?---\s*\r?\n([\s\S]*?)\r?\n---/m)?.[1];
+  const date = frontmatter?.match(/^date:\s*(.+)$/m)?.[1].trim();
+  return date ? new Date(date).toISOString() : fs.stat(filePath).then((stats) => stats.mtime.toISOString());
+}
+
 async function listMarkdownFiles(directory, relativeDirectory = "") {
   const entries = await fs.readdir(path.join(directory, relativeDirectory), { withFileTypes: true });
   const files = [];
@@ -264,7 +270,7 @@ app.get("/api/posts", async (_request, response) => {
         fileName,
         title: postTitle(markdown, fileName),
         excerpt: postExcerpt(markdown),
-        publishedAt: stats.mtime.toISOString(),
+        publishedAt: await publishedAt(markdown, path.join(postsDirectory, fileName)),
         url: `/posts/${fileName.split(path.sep).map(encodeURIComponent).join("/")}.html`,
       };
     }),

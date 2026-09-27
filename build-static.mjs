@@ -21,6 +21,12 @@ function getTitle(markdown, fileName) {
   );
 }
 
+function getPublishedAt(markdown, filePath) {
+  const frontmatterDate = markdown.match(/^\uFEFF?---\s*\r?\n([\s\S]*?)\r?\n---/m)?.[1]
+    ?.match(/^date:\s*(.+)$/m)?.[1].trim();
+  return frontmatterDate ? new Date(frontmatterDate).toISOString() : fs.stat(filePath).then((stats) => stats.mtime.toISOString());
+}
+
 function getExcerpt(markdown) {
   const text = stripFrontmatter(markdown)
     .replace(/^```[\s\S]*?```/gm, "")
@@ -81,7 +87,6 @@ for (const relativeFileName of sourceFiles.filter((fileName) => fileName.endsWit
   const sourcePath = path.join(sourceDirectory, relativeFileName);
   const relativeDirectory = path.dirname(relativeFileName) === "." ? "" : path.dirname(relativeFileName);
   const markdown = await fs.readFile(sourcePath, "utf8");
-  const stats = await fs.stat(sourcePath);
   const title = getTitle(markdown, relativeFileName);
   const outputName = `${relativeFileName}.html`;
   const outputPath = path.join(outputDirectory, "posts", outputName);
@@ -90,7 +95,7 @@ for (const relativeFileName of sourceFiles.filter((fileName) => fileName.endsWit
     fileName: relativeFileName,
     title,
     excerpt: getExcerpt(markdown),
-    publishedAt: stats.mtime.toISOString(),
+    publishedAt: await getPublishedAt(markdown, sourcePath),
     url: `posts/${outputName.split(path.sep).map(encodeURIComponent).join("/")}`,
   });
 
