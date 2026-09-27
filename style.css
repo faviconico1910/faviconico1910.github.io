@@ -36,7 +36,7 @@ body {
   width: min(100% - 48px, 980px);
   min-height: 100vh;
   margin: 0 auto;
-  padding: 42px 0 48px;
+  padding: 42px 0 88px;
 }
 
 .topbar {
@@ -384,13 +384,17 @@ h2 {
 }
 
 footer {
-  grid-column: 1 / -1;
-  width: 100vw;
-  margin-top: 34px;
-  margin-left: calc(50% - 50vw);
+  position: fixed;
+  z-index: 5;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: auto;
+  margin: 0;
   padding: 18px 24px 20px;
   border-top: 1px solid #4a2636;
   background: #1b161d;
+  box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.16);
   color: var(--muted);
   font-family: var(--mono);
   font-size: 0.72rem;
