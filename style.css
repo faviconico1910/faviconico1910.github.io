@@ -30,9 +30,11 @@ body {
 
 .page-shell {
   display: grid;
+  grid-template-rows: auto 1fr auto;
   grid-template-columns: 220px minmax(0, 1fr);
   gap: 64px;
   width: min(100% - 48px, 980px);
+  min-height: 100vh;
   margin: 0 auto;
   padding: 42px 0 48px;
 }
@@ -384,6 +386,9 @@ h2 {
 footer {
   grid-column: 1 / -1;
   margin-top: 34px;
+  padding: 18px 0 2px;
+  border-top: 1px solid #4a2636;
+  background: rgba(28, 21, 30, 0.72);
   color: var(--muted);
   font-family: var(--mono);
   font-size: 0.72rem;
@@ -485,8 +490,10 @@ footer span {
 
 @media (max-width: 560px) {
   .page-shell {
-    display: block;
+    display: flex;
+    flex-direction: column;
     width: min(100% - 32px, 700px);
+    min-height: 100vh;
     padding-top: 56px;
   }
 
@@ -512,6 +519,14 @@ footer span {
 
   .profile-copy {
     max-width: 530px;
+  }
+
+  .content-area {
+    flex: 1;
+  }
+
+  footer {
+    margin-top: 54px;
   }
 
   .article-page {
@@ -606,15 +621,25 @@ footer span {
   position: absolute;
   top: -10px;
   right: -10px;
-  width: 36px;
-  height: 36px;
-  border: 1px solid var(--line);
+  width: 40px;
+  height: 40px;
+  border: 2px solid #e51d45;
   border-radius: 50%;
-  background: var(--paper);
-  color: var(--ink);
+  background: #171318;
+  box-shadow: 0 0 0 3px #171318, 0 0 18px rgba(229, 29, 69, 0.55);
+  color: #ff365d;
   cursor: pointer;
+  font-family: var(--mono);
   font-size: 1.5rem;
+  font-weight: 700;
   line-height: 1;
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.lightbox-close:hover {
+  background: #e51d45;
+  color: #171318;
+  transform: rotate(90deg);
 }
 
 .lightbox-close:focus-visible {
