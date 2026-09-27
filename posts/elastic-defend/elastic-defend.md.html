@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Elastic: Using Elastic Defend - s4lm0n</title>
+    <link rel="stylesheet" href="../../style.css" />
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <main class="article-page">
+      <a class="article-back" href="../../">&larr; Back to home</a>
+      <article class="article-content"><h1>Elastic: Using Elastic Defend</h1>
+<h2>Explore Elastic Defend telemetry and alerts to investigate endpoint activity.</h2>
+<p>Elastic Defend protects endpoints by detecting and preventing malicious activity at the operating system level. Rather than relying solely on known malware signatures, it monitors real-time system behavior. This includes processes, file activity, memory usage, and network connections, so that it can identify both known threats and suspicious techniques used by attackers. This allows it to detect both traditional malware and advanced malicious activity.</p>
+<h2>Questions</h2>
+<ul>
+<li>What is the process.parent.executable field value for the event you located?</li>
+</ul>
+<p><strong>Answer</strong>: <code>/usr/bin/bash</code></p>
+<ul>
+<li>What is the first command executed by the script? We immediately find the first command executed based on process.parent.entity_id (or easier, based on timestamp)</li>
+</ul>
+<p><strong>Answer</strong>: <code>find /home -name *creds*</code>
+<img src="image.png" alt="alt text"></p>
+<ul>
+<li>What is the name of the directory created in /tmp?</li>
+</ul>
+<p><strong>Answer</strong>: <code>creds</code>
+<img src="image-1.png" alt="alt text"></p>
+<ul>
+<li>What is the event.risk_score field value?</li>
+</ul>
+<p><strong>Answer</strong>: <code>73</code></p>
+<ul>
+<li>What event.code field value is assigned to the above alert?</li>
+</ul>
+<p><strong>Answer</strong>: <code>malicious_file</code>
+<img src="image-2.png" alt="alt text"></p>
+<ul>
+<li>What is the first MITRE ATT&amp;CK tactic name associated with the alert?</li>
+</ul>
+<p><strong>Answer</strong>: <code>Privilege Escalation</code>
+<img src="image-3.png" alt="alt text"></p>
+<ul>
+<li>How many MITRE Tactics are associated with the Cron Job Created or Modified alert?</li>
+</ul>
+<p><strong>Answer</strong>: <code>3</code>. These&#39;re Persistence (Open a Reverse Shell to connect back every minute and make it a crob job), Privilege Escalation (chmod +x) and Execution.</p>
+<ul>
+<li>Investigate the printf child process using the Analyzer graph and flyout panel. What is the process.executable field value?</li>
+</ul>
+<p><strong>Answer</strong>: <code>/usr/bin/printf</code></p>
+<ul>
+<li>Which IP address and port number were used for the reverse shell attempt?</li>
+</ul>
+<p><strong>Answer</strong>: <code>10.10.10.100 4444</code></p>
+<ul>
+<li>What is the name of the cron job whose permissions were set?</li>
+</ul>
+<p><strong>Answer</strong>: <code>system-update</code>
+<img src="image-4.png" alt="alt text"></p>
+</article>
+    </main>
+  </body>
+</html>

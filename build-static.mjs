@@ -30,19 +30,37 @@ function getExcerpt(markdown) {
   return text.length > 150 ? `${text.slice(0, 147)}...` : text;
 }
 
-function articlePage(title, html) {
+async function listFiles(directory, relativeDirectory = "") {
+  const entries = await fs.readdir(path.join(directory, relativeDirectory), { withFileTypes: true });
+  const files = [];
+
+  for (const entry of entries) {
+    const relativePath = path.join(relativeDirectory, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...(await listFiles(directory, relativePath)));
+    } else {
+      files.push(relativePath);
+    }
+  }
+
+  return files;
+}
+
+function articlePage(title, html, relativeDirectory) {
+  const directoryDepth = relativeDirectory ? relativeDirectory.split(path.sep).length : 0;
+  const rootPrefix = "../".repeat(directoryDepth + 1);
   return `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>${title} - s4lm0n</title>
-    <link rel="stylesheet" href="../style.css" />
-    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="${rootPrefix}style.css" />
+    <link rel="icon" href="${rootPrefix}favicon.svg" type="image/svg+xml" />
   </head>
   <body>
     <main class="article-page">
-      <a class="article-back" href="../">&larr; Back to home</a>
+      <a class="article-back" href="${rootPrefix}">&larr; Back to home</a>
       <article class="article-content">${html}</article>
     </main>
   </body>
@@ -56,26 +74,30 @@ await fs.copyFile(path.join(root, "style.css"), path.join(outputDirectory, "styl
 await fs.copyFile(path.join(root, "salmon-cartoon.svg"), path.join(outputDirectory, "salmon-cartoon.svg"));
 await fs.copyFile(path.join(root, "favicon.svg"), path.join(outputDirectory, "favicon.svg"));
 
-const entries = await fs.readdir(sourceDirectory, { withFileTypes: true });
+const sourceFiles = await listFiles(sourceDirectory);
 const posts = [];
 
-for (const entry of entries.filter((item) => item.isFile() && item.name.endsWith(".md"))) {
-  const markdown = await fs.readFile(path.join(sourceDirectory, entry.name), "utf8");
-  const stats = await fs.stat(path.join(sourceDirectory, entry.name));
-  const title = getTitle(markdown, entry.name);
-  const outputName = `${entry.name}.html`;
+for (const relativeFileName of sourceFiles.filter((fileName) => fileName.endsWith(".md"))) {
+  const sourcePath = path.join(sourceDirectory, relativeFileName);
+  const relativeDirectory = path.dirname(relativeFileName) === "." ? "" : path.dirname(relativeFileName);
+  const markdown = await fs.readFile(sourcePath, "utf8");
+  const stats = await fs.stat(sourcePath);
+  const title = getTitle(markdown, relativeFileName);
+  const outputName = `${relativeFileName}.html`;
+  const outputPath = path.join(outputDirectory, "posts", outputName);
 
   posts.push({
-    fileName: entry.name,
+    fileName: relativeFileName,
     title,
     excerpt: getExcerpt(markdown),
     publishedAt: stats.mtime.toISOString(),
-    url: `posts/${encodeURIComponent(outputName)}`,
+    url: `posts/${outputName.split(path.sep).map(encodeURIComponent).join("/")}`,
   });
 
+  await fs.mkdir(path.dirname(outputPath), { recursive: true });
   await fs.writeFile(
-    path.join(outputDirectory, "posts", outputName),
-    articlePage(title, marked.parse(stripFrontmatter(markdown))),
+    outputPath,
+    articlePage(title, marked.parse(stripFrontmatter(markdown)), relativeDirectory),
   );
 }
 
@@ -83,6 +105,12 @@ posts.sort((left, right) => right.publishedAt.localeCompare(left.publishedAt));
 const postsJson = JSON.stringify({ posts }, null, 2);
 await fs.writeFile(path.join(outputDirectory, "posts.json"), postsJson);
 await fs.writeFile(path.join(root, "posts.json"), postsJson);
+
+for (const fileName of sourceFiles.filter((fileName) => !fileName.endsWith(".md") && !fileName.endsWith(".html"))) {
+  const outputPath = path.join(outputDirectory, "posts", fileName);
+  await fs.mkdir(path.dirname(outputPath), { recursive: true });
+  await fs.copyFile(path.join(sourceDirectory, fileName), outputPath);
+}
 
 for (const post of posts) {
   await fs.copyFile(

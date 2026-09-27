@@ -85,8 +85,8 @@ function safeFilename(originalName) {
 }
 
 function markdownFileName(fileName) {
-  const safeName = path.basename(fileName);
-  if (!safeName.endsWith(".md")) {
+  const safeName = path.normalize(fileName);
+  if (safeName.startsWith("..") || path.isAbsolute(safeName) || !safeName.endsWith(".md")) {
     throw new Error("Invalid Markdown filename");
   }
   return safeName;
@@ -101,13 +101,20 @@ function frontmatterTitle(markdown) {
   return frontmatter?.match(/^title:\s*(.+)$/m)?.[1].trim().replace(/^['"]|['"]$/g, "");
 }
 
-async function listMarkdownFiles(directory) {
-  const entries = await fs.readdir(directory, { withFileTypes: true });
-  return entries
-    .filter((entry) => entry.isFile() && entry.name.endsWith(".md"))
-    .map((entry) => entry.name)
-    .sort()
-    .reverse();
+async function listMarkdownFiles(directory, relativeDirectory = "") {
+  const entries = await fs.readdir(path.join(directory, relativeDirectory), { withFileTypes: true });
+  const files = [];
+
+  for (const entry of entries) {
+    const relativePath = path.join(relativeDirectory, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...(await listMarkdownFiles(directory, relativePath)));
+    } else if (entry.name.endsWith(".md")) {
+      files.push(relativePath);
+    }
+  }
+
+  return files.sort().reverse();
 }
 
 function postTitle(markdown, fileName) {
@@ -258,7 +265,7 @@ app.get("/api/posts", async (_request, response) => {
         title: postTitle(markdown, fileName),
         excerpt: postExcerpt(markdown),
         publishedAt: stats.mtime.toISOString(),
-        url: `/post/${encodeURIComponent(fileName)}`,
+        url: `/posts/${fileName.split(path.sep).map(encodeURIComponent).join("/")}.html`,
       };
     }),
   );

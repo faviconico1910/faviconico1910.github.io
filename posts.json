@@ -1,6 +1,20 @@
 {
   "posts": [
     {
+      "fileName": "elastic-defend\\elastic-defend.md",
+      "title": "Elastic: Using Elastic Defend",
+      "excerpt": "Elastic: Using Elastic Defend Explore Elastic Defend telemetry and alerts to investigate endpoint activity. Elastic Defend protects endpoints by de...",
+      "publishedAt": "2026-09-27T08:28:32.429Z",
+      "url": "posts/elastic-defend/elastic-defend.md.html"
+    },
+    {
+      "fileName": "linux.md",
+      "title": "Regular Expression",
+      "excerpt": "Regular Expression | Operator | Description | | | | | (a) | Groups parts of a regex so they can be processed together. | | az | Defines a character...",
+      "publishedAt": "2026-09-27T03:25:18.550Z",
+      "url": "posts/linux.md.html"
+    },
+    {
       "fileName": "2026-09-08T07-22-30-490Z-README.md",
       "title": "WannaPlayAGame",
       "excerpt": "WannaPlayAGame We'll use out of bound bug to exploit. The program calls conv without checking the range of it. The plan is to call hard with a righ...",
