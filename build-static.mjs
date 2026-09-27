@@ -77,7 +77,7 @@ await fs.rm(outputDirectory, { recursive: true, force: true });
 await fs.mkdir(path.join(outputDirectory, "posts"), { recursive: true });
 await fs.copyFile(path.join(root, "index.html"), path.join(outputDirectory, "index.html"));
 await fs.copyFile(path.join(root, "style.css"), path.join(outputDirectory, "style.css"));
-await fs.copyFile(path.join(root, "salmon-cartoon.svg"), path.join(outputDirectory, "salmon-cartoon.svg"));
+await fs.copyFile(path.join(root, "spider.jpg"), path.join(outputDirectory, "spider.jpg"));
 await fs.copyFile(path.join(root, "favicon.svg"), path.join(outputDirectory, "favicon.svg"));
 
 const sourceFiles = await listFiles(sourceDirectory);
