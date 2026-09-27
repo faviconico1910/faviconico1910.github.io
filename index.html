@@ -35,13 +35,9 @@
 
       <!-- Profile: thay ảnh, tên, bio và các đường dẫn mạng xã hội tại đây. -->
       <header class="profile-section">
-        <img
-          class="avatar"
-          src="spider.jpg"
-          alt="Ảnh đại diện cá hồi của s4lm0n"
-          width="80"
-          height="80"
-        />
+        <button class="avatar-trigger" type="button" aria-label="Xem ảnh đại diện">
+          <img class="avatar" src="spider.jpg" alt="Ảnh đại diện của s4lm0n" width="80" height="80" />
+        </button>
 
         <div class="profile-copy">
           <h1>s4lm0n</h1>
@@ -112,7 +108,37 @@
 
       <footer>© 2026 s4lm0n <span aria-hidden="true">·</span> Made with care</footer>
     </main>
+
+    <div class="avatar-lightbox" hidden>
+      <button class="lightbox-backdrop" type="button" aria-label="Đóng ảnh đại diện"></button>
+      <div class="lightbox-content" role="dialog" aria-modal="true" aria-label="Ảnh đại diện">
+        <button class="lightbox-close" type="button" aria-label="Đóng ảnh đại diện">&times;</button>
+        <img src="spider.jpg" alt="Ảnh đại diện của s4lm0n" />
+      </div>
+    </div>
+
     <script>
+      const avatarTrigger = document.querySelector(".avatar-trigger");
+      const avatarLightbox = document.querySelector(".avatar-lightbox");
+      const lightboxClose = document.querySelector(".lightbox-close");
+
+      function closeAvatarLightbox() {
+        avatarLightbox.hidden = true;
+        document.body.classList.remove("lightbox-open");
+        avatarTrigger.focus();
+      }
+
+      avatarTrigger.addEventListener("click", () => {
+        avatarLightbox.hidden = false;
+        document.body.classList.add("lightbox-open");
+        lightboxClose.focus();
+      });
+      lightboxClose.addEventListener("click", closeAvatarLightbox);
+      document.querySelector(".lightbox-backdrop").addEventListener("click", closeAvatarLightbox);
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !avatarLightbox.hidden) closeAvatarLightbox();
+      });
+
       const tabButtons = document.querySelectorAll("[data-tab]");
       const tabPanels = document.querySelectorAll("[data-panel]");
 
