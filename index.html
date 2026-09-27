@@ -135,6 +135,9 @@
       });
       lightboxClose.addEventListener("click", closeAvatarLightbox);
       document.querySelector(".lightbox-backdrop").addEventListener("click", closeAvatarLightbox);
+      avatarLightbox.addEventListener("click", (event) => {
+        if (event.target === avatarLightbox) closeAvatarLightbox();
+      });
       document.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && !avatarLightbox.hidden) closeAvatarLightbox();
       });
