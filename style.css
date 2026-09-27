@@ -385,10 +385,12 @@ h2 {
 
 footer {
   grid-column: 1 / -1;
+  width: 100vw;
   margin-top: 34px;
-  padding: 18px 0 2px;
+  margin-left: calc(50% - 50vw);
+  padding: 18px 24px 20px;
   border-top: 1px solid #4a2636;
-  background: rgba(28, 21, 30, 0.72);
+  background: #1b161d;
   color: var(--muted);
   font-family: var(--mono);
   font-size: 0.72rem;
