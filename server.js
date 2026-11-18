@@ -260,6 +260,16 @@ app.get("/", (_request, response) => {
   response.sendFile(path.join(__dirname, "index.html"));
 });
 
+app.get(["/style.css", "/spider.jpg", "/favicon.svg"], (request, response, next) => {
+  const publicFiles = new Set(["style.css", "spider.jpg", "favicon.svg"]);
+  const fileName = path.basename(request.path);
+  if (!publicFiles.has(fileName)) {
+    next();
+    return;
+  }
+  response.sendFile(path.join(__dirname, fileName));
+});
+
 app.get("/api/posts", async (_request, response) => {
   const files = await listMarkdownFiles(postsDirectory);
   const posts = await Promise.all(
@@ -289,9 +299,12 @@ app.get("/post/:fileName", async (request, response) => {
   }
 });
 
-app.use(express.static(__dirname, { index: false }));
+app.use("/posts", express.static(postsDirectory, { index: false, dotfiles: "deny" }));
+app.use("/private", (_request, response) => {
+  response.status(404).send("Not found");
+});
 
-app.listen(port, () => {
-  console.log(`s4lm0n blog running at http://localhost:${port}`);
-  console.log(`Private Markdown inbox at http://localhost:${port}/admin`);
+app.listen(port, "127.0.0.1", () => {
+  console.log(`s4lm0n blog running at http://127.0.0.1:${port}`);
+  console.log(`Private Markdown inbox at http://127.0.0.1:${port}/admin`);
 });

@@ -22,9 +22,9 @@
    npm start
    ```
 
-Open `http://localhost:3000` for the blog and `http://localhost:3000/admin` for the private Markdown inbox.
+Open `http://127.0.0.1:3000` for the blog and `http://127.0.0.1:3000/admin` for the private Markdown inbox. The Express server listens only on loopback, so it is not reachable from other machines.
 
-The server accepts only `.md`/`.markdown` files up to 2 MB. Uploaded drafts are stored under `private/markdown-inbox/`, which is excluded from Git and is never served publicly. Uploads are not published automatically.
+The server accepts only `.md`/`.markdown` files up to 2 MB. Uploaded drafts are stored under `private/markdown-inbox/`, which is excluded from Git and is not exposed by the web server. Uploads are not published automatically. Only the site root, public assets, and the `posts/` directory are statically accessible.
 
 After uploading, use the `Preview` button in the private inbox to render the Markdown draft for review.
 
